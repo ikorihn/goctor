@@ -1,0 +1,163 @@
+openapi: 3.0.3
+info:
+  title: Manifest Schema
+  description: YAML manifest file format for tool requirements
+  version: 1.0.0
+
+components:
+  schemas:
+    Manifest:
+      type: object
+      required: [meta, tools]
+      properties:
+        meta:
+          $ref: '#/components/schemas/ManifestMeta'
+        defaults:
+          $ref: '#/components/schemas/ManifestDefaults'
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToolDefinition'
+          minItems: 1
+
+    ManifestMeta:
+      type: object
+      required: [version, name]
+      properties:
+        version:
+          type: integer
+          const: 1
+          description: Manifest schema version
+        name:
+          type: string
+          minLength: 1
+          description: Human-readable manifest name
+        language:
+          type: string
+          pattern: '^[a-z]{2}$'
+          description: ISO 639-1 language code
+          default: "en"
+
+    ManifestDefaults:
+      type: object
+      properties:
+        timeout_sec:
+          type: integer
+          minimum: 1
+          maximum: 300
+          default: 5
+          description: Default timeout for tool commands
+        regex_key:
+          type: string
+          default: "ver"
+          description: Default named capture group for version regex
+
+    ToolDefinition:
+      type: object
+      required: [id, name, rationale, require, check, links]
+      properties:
+        id:
+          type: string
+          pattern: '^[a-z0-9-]+$'
+          description: Unique tool identifier
+        name:
+          type: string
+          minLength: 1
+          description: Human-readable tool name
+        rationale:
+          type: string
+          minLength: 1
+          description: Why this tool is required
+        require:
+          type: string
+          pattern: '^[>=<~^0-9\.\s\-\+\w]+$'
+          description: Semantic version constraint
+        check:
+          $ref: '#/components/schemas/CheckCommand'
+        links:
+          $ref: '#/components/schemas/ToolLinks'
+
+    CheckCommand:
+      type: object
+      required: [cmd, regex]
+      properties:
+        cmd:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          description: Command and arguments to execute
+        regex:
+          type: string
+          pattern: '.*\(\?\P<\w+>.*\).*'
+          description: Regular expression with named capture group
+
+    ToolLinks:
+      type: object
+      additionalProperties:
+        type: string
+        format: uri
+      properties:
+        homepage:
+          type: string
+          format: uri
+        download:
+          type: string
+          format: uri
+        docs:
+          type: string
+          format: uri
+        github:
+          type: string
+          format: uri
+
+# Example Manifest
+examples:
+  company-manifest:
+    summary: Company development baseline manifest
+    value:
+      meta:
+        version: 1
+        name: "Company Dev Baseline"
+        language: "ja"
+
+      defaults:
+        timeout_sec: 5
+        regex_key: "ver"
+
+      tools:
+        - id: go
+          name: "Go"
+          rationale: "Go製リポのビルドに必須"
+          require: ">=1.22 <1.25"
+          check:
+            cmd: ["go", "version"]
+            regex: "go(?P<ver>\\d+\\.\\d+(\\.\\d+)?)"
+          links:
+            homepage: "https://go.dev/"
+            download: "https://go.dev/dl/"
+            docs: "https://go.dev/doc/"
+            github: "https://github.com/golang/go"
+
+        - id: docker
+          name: "Docker"
+          rationale: "ローカル実行・CI互換のため"
+          require: ">=24"
+          check:
+            cmd: ["docker", "--version"]
+            regex: "version (?P<ver>\\d+\\.\\d+\\.\\d+)"
+          links:
+            homepage: "https://www.docker.com/"
+            docs: "https://docs.docker.com/get-docker/"
+
+        - id: gh
+          name: "GitHub CLI"
+          rationale: "GitHub操作用"
+          require: ">=2.0"
+          check:
+            cmd: ["gh", "--version"]
+            regex: "gh version (?P<ver>\\d+\\.\\d+\\.\\d+)"
+          links:
+            homepage: "https://cli.github.com/"
+            docs: "https://cli.github.com/manual/"
+            github: "https://github.com/cli/cli"

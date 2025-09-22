@@ -1,0 +1,237 @@
+openapi: 3.0.3
+info:
+  title: Development Environment Checker CLI
+  description: Command-line interface contract for the doctor CLI tool
+  version: 1.0.0
+
+# CLI Command Interface Definition
+components:
+  schemas:
+    ExitCode:
+      type: integer
+      enum: [0, 1]
+      description: |
+        - 0: All requirements satisfied
+        - 1: Missing or outdated tools found
+
+    OutputFormat:
+      type: string
+      enum: ["human", "json"]
+      description: Output format selection
+
+    ManifestSource:
+      type: string
+      description: Path to local file or HTTP/HTTPS URL
+
+    # JSON Output Schema
+    EnvironmentReport:
+      type: object
+      required: [schema_version, platform, summary, manifest_source, items, generated_at]
+      properties:
+        schema_version:
+          type: integer
+          const: 1
+        platform:
+          $ref: '#/components/schemas/PlatformInfo'
+        summary:
+          $ref: '#/components/schemas/CheckSummary'
+        manifest_source:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckResult'
+        generated_at:
+          type: string
+          format: date-time
+
+    PlatformInfo:
+      type: object
+      required: [os, arch]
+      properties:
+        os:
+          type: string
+          enum: ["darwin", "linux"]
+        arch:
+          type: string
+          enum: ["amd64", "arm64"]
+        hostname:
+          type: string
+
+    CheckSummary:
+      type: object
+      required: [total, ok, missing, outdated, errors]
+      properties:
+        total:
+          type: integer
+          minimum: 0
+        ok:
+          type: integer
+          minimum: 0
+        missing:
+          type: integer
+          minimum: 0
+        outdated:
+          type: integer
+          minimum: 0
+        errors:
+          type: integer
+          minimum: 0
+
+    CheckResult:
+      type: object
+      required: [id, name, status, required, rationale, links]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+          enum: ["ok", "missing", "outdated", "error"]
+        required:
+          type: string
+          description: Semantic version constraint
+        installed:
+          type: string
+          nullable: true
+          description: Detected version or null if not found
+        rationale:
+          type: string
+        links:
+          type: object
+          additionalProperties:
+            type: string
+            format: uri
+        errors:
+          type: array
+          items:
+            type: string
+
+# CLI Command Definitions
+paths:
+  /doctor:
+    get:
+      summary: Verify development environment
+      description: |
+        Main command to check all tools in manifest and report status.
+
+        Usage: doctor [flags]
+      parameters:
+        - name: manifest
+          in: query
+          schema:
+            $ref: '#/components/schemas/ManifestSource'
+          description: Manifest file path or URL (default: embedded company manifest)
+        - name: json
+          in: query
+          schema:
+            type: boolean
+          description: Output JSON format instead of human-readable
+      responses:
+        '0':
+          description: All tools meet requirements
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: |
+                  [OK] go (require >=1.22)
+                    Installed: 1.22.1
+                  [OK] docker (require >=24)
+                    Installed: 24.0.6
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentReport'
+        '1':
+          description: Some tools missing or outdated
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: |
+                  [Missing] go (require >=1.22 <1.25)
+                    Installed: not found
+                    Why: Go製リポのビルドに必須
+                    Links:
+                      - Download  https://go.dev/dl/
+                      - Docs      https://go.dev/doc/
+                  [OK] docker (require >=24)
+                    Installed: 24.0.6
+
+  /list:
+    get:
+      summary: List all tools in manifest
+      description: |
+        Show all tools defined in the current manifest without checking installation.
+
+        Usage: list [flags]
+      parameters:
+        - name: manifest
+          in: query
+          schema:
+            $ref: '#/components/schemas/ManifestSource'
+          description: Manifest file path or URL (default: embedded company manifest)
+        - name: json
+          in: query
+          schema:
+            type: boolean
+          description: Output JSON format instead of human-readable
+      responses:
+        '0':
+          description: Successfully listed all tools
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: |
+                  Tools defined in manifest:
+                  - go: Go (>=1.22 <1.25) - Go製リポのビルドに必須
+                  - docker: Docker (>=24) - ローカル実行・CI互換のため
+                  - gh: GitHub CLI (>=2.0) - GitHub操作用
+            application/json:
+              schema:
+                type: object
+                properties:
+                  manifest_source:
+                    type: string
+                  tools:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        required_version:
+                          type: string
+                        rationale:
+                          type: string
+
+# Global Flag Specifications
+x-cli-flags:
+  manifest:
+    short: "f"
+    long: "manifest"
+    type: string
+    description: "Manifest file path or URL"
+    default: "embedded company manifest"
+
+  json:
+    long: "json"
+    type: boolean
+    description: "Output JSON format"
+    default: false
+
+  help:
+    short: "h"
+    long: "help"
+    type: boolean
+    description: "Show help message"
+
+  version:
+    short: "v"
+    long: "version"
+    type: boolean
+    description: "Show version information"
