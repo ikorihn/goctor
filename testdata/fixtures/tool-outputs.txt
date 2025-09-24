@@ -1,0 +1,24 @@
+# Sample tool command outputs for testing version extraction
+
+## Go version output
+go version go1.22.1 darwin/arm64
+
+## Git version output
+git version 2.39.2 (Apple Git-143)
+
+## Docker version output
+Docker version 24.0.6, build ed223bc
+
+## Node.js version output
+v18.17.1
+
+## Python version output
+Python 3.11.5
+
+## Invalid/missing tool outputs
+command not found: nonexistent-tool
+zsh: command not found: missing-tool
+
+## Malformed version outputs
+go version devel +abcd123 linux/amd64
+Some Tool v1.2.3-beta.1+build.456

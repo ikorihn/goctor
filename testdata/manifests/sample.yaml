@@ -1,0 +1,46 @@
+meta:
+  version: 1
+  name: "Test Manifest"
+  language: "en"
+
+defaults:
+  timeout_sec: 5
+  regex_key: "ver"
+
+tools:
+  - id: go
+    name: "Go"
+    rationale: "Go development toolchain"
+    require: ">=1.22"
+    check:
+      cmd: ["go", "version"]
+      regex: "go(?P<ver>\\d+\\.\\d+(\\.\\d+)?)"
+    links:
+      homepage: "https://go.dev/"
+      download: "https://go.dev/dl/"
+      docs: "https://go.dev/doc/"
+      github: "https://github.com/golang/go"
+
+  - id: git
+    name: "Git"
+    rationale: "Version control system"
+    require: ">=2.30"
+    check:
+      cmd: ["git", "--version"]
+      regex: "git version (?P<ver>\\d+\\.\\d+\\.\\d+)"
+    links:
+      homepage: "https://git-scm.com/"
+      download: "https://git-scm.com/downloads"
+      docs: "https://git-scm.com/doc"
+
+  - id: docker
+    name: "Docker"
+    rationale: "Container platform for development"
+    require: ">=24"
+    check:
+      cmd: ["docker", "--version"]
+      regex: "version (?P<ver>\\d+\\.\\d+\\.\\d+)"
+    links:
+      homepage: "https://www.docker.com/"
+      download: "https://docs.docker.com/get-docker/"
+      docs: "https://docs.docker.com/"
