@@ -1,0 +1,61 @@
+# Development Environment Tools Configuration
+# This file defines the required tools and their versions for this project
+
+meta:
+  version: 1
+  name: "Project Development Tools"
+  language: "en"
+
+defaults:
+  timeout_sec: 5
+  regex_key: "ver"
+
+tools:
+  - id: go
+    name: "Go"
+    rationale: "Go development toolchain for building and testing"
+    require: ">=1.20"
+    check:
+      cmd: ["go", "version"]
+      regex: "go(?P<ver>\\d+\\.\\d+(\\.\\d+)?)"
+    links:
+      homepage: "https://go.dev/"
+      download: "https://go.dev/dl/"
+      docs: "https://go.dev/doc/"
+
+  - id: git
+    name: "Git"
+    rationale: "Version control system for source code management"
+    require: ">=2.30"
+    check:
+      cmd: ["git", "--version"]
+      regex: "git version (?P<ver>\\d+\\.\\d+\\.\\d+)"
+    links:
+      homepage: "https://git-scm.com/"
+      download: "https://git-scm.com/downloads"
+      docs: "https://git-scm.com/doc"
+
+  - id: docker
+    name: "Docker"
+    rationale: "Container runtime for development and deployment"
+    require: ">=24.0"
+    check:
+      cmd: ["docker", "--version"]
+      regex: "Docker version (?P<ver>\\d+\\.\\d+\\.\\d+)"
+    timeout_sec: 10
+    links:
+      homepage: "https://docker.com/"
+      download: "https://docker.com/get-started"
+      docs: "https://docs.docker.com/"
+
+  - id: node
+    name: "Node.js"
+    rationale: "JavaScript runtime for frontend build tools"
+    require: ">=18.0"
+    check:
+      cmd: ["node", "--version"]
+      regex: "v(?P<ver>\\d+\\.\\d+\\.\\d+)"
+    links:
+      homepage: "https://nodejs.org/"
+      download: "https://nodejs.org/en/download/"
+      docs: "https://nodejs.org/en/docs/"

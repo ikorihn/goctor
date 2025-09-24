@@ -104,19 +104,6 @@ func (l *Loader) LoadFromSource(source string) (*Manifest, error) {
 	return l.LoadFromFile(source)
 }
 
-// LoadEmbedded loads a manifest from embedded data (for default manifest)
-func (l *Loader) LoadEmbedded(data []byte) (*Manifest, error) {
-	if len(data) == 0 {
-		return nil, errors.New("embedded data cannot be empty")
-	}
-
-	manifest, err := l.parseYAML(data)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse embedded manifest: %v", err)
-	}
-
-	return manifest, nil
-}
 
 // parseYAML parses YAML data into a Manifest struct
 func (l *Loader) parseYAML(data []byte) (*Manifest, error) {
@@ -251,46 +238,6 @@ func (l *Loader) ValidateManifestStructure(data []byte) error {
 	return nil
 }
 
-// GetEmbeddedManifest returns the default embedded manifest
-func GetEmbeddedManifest() []byte {
-	// This would typically be embedded using go:embed or similar
-	// For now, we'll return a basic manifest
-	return []byte(`
-meta:
-  version: 1
-  name: "Default Development Tools"
-  language: "en"
-
-defaults:
-  timeout_sec: 5
-  regex_key: "ver"
-
-tools:
-  - id: go
-    name: "Go"
-    rationale: "Go development toolchain"
-    require: ">=1.20"
-    check:
-      cmd: ["go", "version"]
-      regex: "go(?P<ver>\\d+\\.\\d+(\\.\\d+)?)"
-    links:
-      homepage: "https://go.dev/"
-      download: "https://go.dev/dl/"
-      docs: "https://go.dev/doc/"
-
-  - id: git
-    name: "Git"
-    rationale: "Version control system"
-    require: ">=2.30"
-    check:
-      cmd: ["git", "--version"]
-      regex: "git version (?P<ver>\\d+\\.\\d+\\.\\d+)"
-    links:
-      homepage: "https://git-scm.com/"
-      download: "https://git-scm.com/downloads"
-      docs: "https://git-scm.com/doc"
-`)
-}
 
 // SetHTTPTimeout sets the timeout for HTTP requests
 func (l *Loader) SetHTTPTimeout(timeout time.Duration) {

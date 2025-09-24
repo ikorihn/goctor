@@ -64,13 +64,11 @@ func runDoctorCommand(manifestSource string, useJSON bool) int {
 	var err error
 
 	if manifestSource == "" {
-		// Load embedded default manifest
-		embeddedData := manifest.GetEmbeddedManifest()
-		m, err = loader.LoadEmbedded(embeddedData)
-		manifestSource = "embedded"
-	} else {
-		m, err = loader.LoadFromSource(manifestSource)
+		// Default to ./tools.yaml
+		manifestSource = "./tools.yaml"
 	}
+
+	m, err = loader.LoadFromSource(manifestSource)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading manifest: %v\n", err)
@@ -120,13 +118,11 @@ func runListCommand(manifestSource string, useJSON bool) int {
 	var err error
 
 	if manifestSource == "" {
-		// Load embedded default manifest
-		embeddedData := manifest.GetEmbeddedManifest()
-		m, err = loader.LoadEmbedded(embeddedData)
-		manifestSource = "embedded"
-	} else {
-		m, err = loader.LoadFromSource(manifestSource)
+		// Default to ./tools.yaml
+		manifestSource = "./tools.yaml"
 	}
+
+	m, err = loader.LoadFromSource(manifestSource)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading manifest: %v\n", err)
@@ -199,10 +195,10 @@ FLAGS:
     -v, --version                 Show version
 
 EXAMPLES:
-    doctor                                    # Check using embedded manifest
+    doctor                                    # Check using ./tools.yaml
     doctor -f custom-manifest.yaml           # Check using custom manifest
     doctor --json                            # Output JSON format
-    list                                     # List tools in manifest
+    list                                     # List tools in ./tools.yaml
     list -f https://company.com/manifest.yaml # List tools from remote manifest
 `)
 }
