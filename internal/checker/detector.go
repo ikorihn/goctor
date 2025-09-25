@@ -31,14 +31,15 @@ func (c *Checker) CheckTool(tool manifest.ToolDefinition, platformInfo platform.
 		ToolName:        tool.Name,
 		RequiredVersion: tool.RequiredVersion,
 		ActualVersion:   "",
+		CommandPath:     "",
 		Status:          StatusNotFound,
 		ErrorMessage:    "",
 		Links:           tool.Links,
 		Platform:        platformInfo.String(),
 	}
 
-	// Check if tool is available
-	available, err := c.isToolAvailable(tool.CheckCommand()[0])
+	// Check if tool is available and get its path
+	commandPath, available, err := c.getToolPath(tool.CheckCommand()[0])
 	if err != nil || !available {
 		result.Status = StatusNotFound
 		if err != nil {
@@ -48,6 +49,8 @@ func (c *Checker) CheckTool(tool manifest.ToolDefinition, platformInfo platform.
 		}
 		return result
 	}
+
+	result.CommandPath = commandPath
 
 	// Extract version from command output
 	version, err := c.extractVersion(tool)
@@ -73,25 +76,26 @@ func (c *Checker) CheckTool(tool manifest.ToolDefinition, platformInfo platform.
 	return result
 }
 
-// isToolAvailable checks if a command is available in the system PATH
-func (c *Checker) isToolAvailable(command string) (bool, error) {
-	// Use `which` command to check if tool exists
+// getToolPath checks if a command is available and returns its path
+func (c *Checker) getToolPath(command string) (string, bool, error) {
+	// Use `which` command to check if tool exists and get its path
 	ctx, cancel := context.WithTimeout(context.Background(), c.commandTimeout)
 	defer cancel()
 
-	cmd := exec.CommandContext(ctx, "which", command)
-	err := cmd.Run()
+	cmd := exec.CommandContext(ctx, "command", "-v", command)
+	output, err := cmd.Output()
 
 	if err != nil {
 		// Check if it's a timeout or other error
 		if ctx.Err() == context.DeadlineExceeded {
-			return false, ctx.Err()
+			return "", false, ctx.Err()
 		}
 		// Command not found is expected for missing tools
-		return false, nil
+		return "", false, nil
 	}
 
-	return true, nil
+	path := strings.TrimSpace(string(output))
+	return path, true, nil
 }
 
 // extractVersion runs the tool's check command and extracts version using regex
@@ -230,3 +234,4 @@ func (c *Checker) CheckMultipleTools(tools []manifest.ToolDefinition, platformIn
 
 	return results
 }
+

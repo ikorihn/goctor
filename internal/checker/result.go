@@ -74,6 +74,7 @@ type CheckResult struct {
 	Status          CheckStatus       `json:"status"`
 	RequiredVersion string            `json:"required"`
 	ActualVersion   string            `json:"actual_version"`
+	CommandPath     string            `json:"command_path,omitempty"`
 	ErrorMessage    string            `json:"error_message,omitempty"`
 	Platform        string            `json:"platform"`
 	Links           map[string]string `json:"links"`

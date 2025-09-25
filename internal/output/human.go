@@ -156,6 +156,11 @@ func (hf *HumanFormatter) formatSingleResult(result checker.CheckResult) string 
 	}
 	output.WriteString(fmt.Sprintf("  Required:  %s\n", result.RequiredVersion))
 
+	// Path information
+	if result.CommandPath != "" {
+		output.WriteString(fmt.Sprintf("  Path:      %s\n", result.CommandPath))
+	}
+
 	// Error message if present
 	if result.ErrorMessage != "" {
 		output.WriteString(fmt.Sprintf("  %s %s\n",
