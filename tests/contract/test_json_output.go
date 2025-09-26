@@ -64,13 +64,13 @@ func TestJSONOutputSchemaCompliance(t *testing.T) {
 	}{
 		{
 			name:       "doctor command JSON output",
-			command:    "./doctor",
+			command:    "./bin/goctor",
 			args:       []string{"doctor", "--json"},
 			schemaType: "environment_report",
 		},
 		{
 			name:       "list command JSON output",
-			command:    "./doctor",
+			command:    "./bin/goctor",
 			args:       []string{"list", "--json"},
 			schemaType: "list_response",
 		},

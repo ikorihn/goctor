@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestDoctorCommandInterface(t *testing.T) {
+func TestGoctorCommandInterface(t *testing.T) {
 	tests := []struct {
 		name           string
 		args           []string
@@ -119,7 +119,7 @@ func TestDoctorCommandExitCodes(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cmd := exec.Command("./doctor", tt.args[1:]...)
+			cmd := exec.Command("./bin/goctor", tt.args[1:]...)
 			_, err := cmd.CombinedOutput()
 
 			exitCode := 0
@@ -138,7 +138,7 @@ func TestDoctorCommandExitCodes(t *testing.T) {
 
 func TestMain(m *testing.M) {
 	// Build the binary before running tests
-	cmd := exec.Command("go", "build", "-o", "doctor", "./cmd/doctor")
+	cmd := exec.Command("go", "build", "-o", "./bin", "./cmd/goctor")
 	if err := cmd.Run(); err != nil {
 		// This will fail until we implement main.go, which is expected for TDD
 		// The tests should run but fail gracefully
@@ -148,7 +148,7 @@ func TestMain(m *testing.M) {
 	code := m.Run()
 
 	// Cleanup
-	os.Remove("doctor")
+	os.Remove("./bin/goctor")
 
 	os.Exit(code)
 }

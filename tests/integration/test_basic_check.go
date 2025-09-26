@@ -16,7 +16,7 @@ func TestBasicEnvironmentCheck(t *testing.T) {
 	}
 
 	// Build the binary first
-	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cmd/doctor")
+	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cm./bin/goctor")
 	if err := buildCmd.Run(); err != nil {
 		t.Skip("Skipping test - unable to build binary (expected until implementation)")
 	}
@@ -63,7 +63,7 @@ func TestBasicEnvironmentCheck(t *testing.T) {
 			}
 
 			// Run the command
-			cmd := exec.Command("./doctor-test", tt.args...)
+			cmd := exec.Command("./bin/goctor-test", tt.args...)
 			output, err := cmd.CombinedOutput()
 
 			// Check exit code
@@ -97,7 +97,7 @@ func TestEnvironmentCheckStatusReporting(t *testing.T) {
 		t.Skip("Skipping integration test in short mode")
 	}
 
-	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cmd/doctor")
+	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cm./bin/goctor")
 	if err := buildCmd.Run(); err != nil {
 		t.Skip("Skipping test - unable to build binary")
 	}
@@ -138,7 +138,7 @@ tools:
 	defer os.Remove(manifestFile)
 
 	// Run doctor command
-	cmd := exec.Command("./doctor-test", "-f", manifestFile)
+	cmd := exec.Command("./bin/goctor-test", "-f", manifestFile)
 	output, err := cmd.CombinedOutput()
 
 	// Should return exit code 1 (issues found)
@@ -180,7 +180,7 @@ func TestEnvironmentCheckTimeout(t *testing.T) {
 		t.Skip("Skipping integration test in short mode")
 	}
 
-	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cmd/doctor")
+	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cm./bin/goctor")
 	if err := buildCmd.Run(); err != nil {
 		t.Skip("Skipping test - unable to build binary")
 	}
@@ -214,7 +214,7 @@ tools:
 	defer os.Remove(manifestFile)
 
 	// Run doctor command - should complete quickly due to timeout
-	cmd := exec.Command("./doctor-test", "-f", manifestFile)
+	cmd := exec.Command("./bin/goctor-test", "-f", manifestFile)
 	output, _ := cmd.CombinedOutput()
 
 	// Should handle timeout gracefully

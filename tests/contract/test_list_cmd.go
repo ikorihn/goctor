@@ -41,7 +41,7 @@ func TestListCommandInterface(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// This test will fail until we implement the CLI
-			cmd := exec.Command("./doctor", tt.args...)
+			cmd := exec.Command("./bin/goctor", tt.args...)
 			output, err := cmd.CombinedOutput()
 
 			// Check exit code
@@ -99,7 +99,7 @@ func TestListCommandInterface(t *testing.T) {
 
 func TestListCommandDisplaysAllTools(t *testing.T) {
 	// Test that list command shows all tools from manifest without executing checks
-	cmd := exec.Command("./doctor", "list", "-f", "testdata/manifests/sample.yaml")
+	cmd := exec.Command("./bin/goctor", "list", "-f", "testdata/manifests/sample.yaml")
 	output, err := cmd.CombinedOutput()
 
 	if err != nil {

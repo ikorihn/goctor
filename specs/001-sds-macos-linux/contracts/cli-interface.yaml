@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Development Environment Checker CLI
-  description: Command-line interface contract for the doctor CLI tool
+  description: Command-line interface contract for the goctor CLI tool
   version: 1.0.0
 
 # CLI Command Interface Definition
@@ -110,13 +110,13 @@ components:
 
 # CLI Command Definitions
 paths:
-  /doctor:
+  /goctor:
     get:
       summary: Verify development environment
       description: |
         Main command to check all tools in manifest and report status.
 
-        Usage: doctor [flags]
+        Usage: goctor [flags]
       parameters:
         - name: manifest
           in: query

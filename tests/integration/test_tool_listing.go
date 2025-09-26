@@ -13,7 +13,7 @@ func TestToolListingFunctionality(t *testing.T) {
 		t.Skip("Skipping integration test in short mode")
 	}
 
-	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cmd/doctor")
+	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cm./bin/goctor")
 	if err := buildCmd.Run(); err != nil {
 		t.Skip("Skipping test - unable to build binary")
 	}
@@ -68,7 +68,7 @@ tools:
 		defer os.Remove(manifestFile)
 
 		// Run list command
-		cmd := exec.Command("./doctor-test", "list", "-f", manifestFile)
+		cmd := exec.Command("./bin/goctor-test", "list", "-f", manifestFile)
 		output, err := cmd.CombinedOutput()
 
 		if err != nil {
@@ -121,7 +121,7 @@ tools:
 	t.Run("list tools JSON format", func(t *testing.T) {
 		manifestFile := "testdata/manifests/sample.yaml"
 
-		cmd := exec.Command("./doctor-test", "list", "--json", "-f", manifestFile)
+		cmd := exec.Command("./bin/goctor-test", "list", "--json", "-f", manifestFile)
 		output, err := cmd.CombinedOutput()
 
 		if err != nil {
@@ -172,7 +172,7 @@ tools:
 
 	t.Run("list with embedded manifest", func(t *testing.T) {
 		// Test listing without specifying manifest (should use embedded)
-		cmd := exec.Command("./doctor-test", "list")
+		cmd := exec.Command("./bin/goctor-test", "list")
 		output, err := cmd.CombinedOutput()
 
 		if err != nil {
@@ -208,7 +208,7 @@ tools: []
 		}
 		defer os.Remove(manifestFile)
 
-		cmd := exec.Command("./doctor-test", "list", "-f", manifestFile)
+		cmd := exec.Command("./bin/goctor-test", "list", "-f", manifestFile)
 		output, err := cmd.CombinedOutput()
 
 		// Should handle empty tools list gracefully
@@ -229,7 +229,7 @@ tools: []
 
 	t.Run("list with invalid manifest", func(t *testing.T) {
 		// Test list command with invalid manifest
-		cmd := exec.Command("./doctor-test", "list", "-f", "nonexistent-manifest.yaml")
+		cmd := exec.Command("./bin/goctor-test", "list", "-f", "nonexistent-manifest.yaml")
 		output, err := cmd.CombinedOutput()
 
 		// Should handle error gracefully
@@ -249,14 +249,14 @@ func TestListCommandExitCodes(t *testing.T) {
 		t.Skip("Skipping integration test in short mode")
 	}
 
-	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cmd/doctor")
+	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cm./bin/goctor")
 	if err := buildCmd.Run(); err != nil {
 		t.Skip("Skipping test - unable to build binary")
 	}
 	defer os.Remove("doctor-test")
 
 	t.Run("successful list returns exit code 0", func(t *testing.T) {
-		cmd := exec.Command("./doctor-test", "list", "-f", "testdata/manifests/sample.yaml")
+		cmd := exec.Command("./bin/goctor-test", "list", "-f", "testdata/manifests/sample.yaml")
 		output, err := cmd.CombinedOutput()
 
 		// Check exit code
@@ -273,7 +273,7 @@ func TestListCommandExitCodes(t *testing.T) {
 	})
 
 	t.Run("list with invalid manifest returns non-zero exit code", func(t *testing.T) {
-		cmd := exec.Command("./doctor-test", "list", "-f", "nonexistent-manifest.yaml")
+		cmd := exec.Command("./bin/goctor-test", "list", "-f", "nonexistent-manifest.yaml")
 		_, err := cmd.CombinedOutput()
 
 		// Should return non-zero exit code
@@ -295,7 +295,7 @@ func TestListCommandPerformance(t *testing.T) {
 		t.Skip("Skipping integration test in short mode")
 	}
 
-	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cmd/doctor")
+	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cm./bin/goctor")
 	if err := buildCmd.Run(); err != nil {
 		t.Skip("Skipping test - unable to build binary")
 	}
@@ -331,7 +331,7 @@ tools:`
 		defer os.Remove(manifestFile)
 
 		// Run list command - should complete quickly without executing tool commands
-		cmd := exec.Command("./doctor-test", "list", "-f", manifestFile)
+		cmd := exec.Command("./bin/goctor-test", "list", "-f", manifestFile)
 		output, err := cmd.CombinedOutput()
 
 		if err != nil {

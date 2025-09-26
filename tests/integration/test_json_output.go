@@ -13,7 +13,7 @@ func TestJSONOutputIntegration(t *testing.T) {
 		t.Skip("Skipping integration test in short mode")
 	}
 
-	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cmd/doctor")
+	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cm./bin/goctor")
 	if err := buildCmd.Run(); err != nil {
 		t.Skip("Skipping test - unable to build binary")
 	}
@@ -46,7 +46,7 @@ tools:
 	defer os.Remove(manifestFile)
 
 	t.Run("doctor command JSON output", func(t *testing.T) {
-		cmd := exec.Command("./doctor-test", "doctor", "--json", "-f", manifestFile)
+		cmd := exec.Command("./bin/goctor-test", "doctor", "--json", "-f", manifestFile)
 		output, err := cmd.CombinedOutput()
 
 		if err != nil {
@@ -65,7 +65,7 @@ tools:
 	})
 
 	t.Run("list command JSON output", func(t *testing.T) {
-		cmd := exec.Command("./doctor-test", "list", "--json", "-f", manifestFile)
+		cmd := exec.Command("./bin/goctor-test", "list", "--json", "-f", manifestFile)
 		output, err := cmd.CombinedOutput()
 
 		if err != nil {
@@ -282,7 +282,7 @@ func TestJSONOutputParsability(t *testing.T) {
 		t.Skip("Skipping integration test in short mode")
 	}
 
-	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cmd/doctor")
+	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cm./bin/goctor")
 	if err := buildCmd.Run(); err != nil {
 		t.Skip("Skipping test - unable to build binary")
 	}
@@ -307,7 +307,7 @@ func TestJSONOutputParsability(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cmd := exec.Command("./doctor-test", tt.command...)
+			cmd := exec.Command("./bin/goctor-test", tt.command...)
 			output, err := cmd.CombinedOutput()
 
 			if err != nil {

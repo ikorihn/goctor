@@ -15,7 +15,7 @@ This guide walks through the primary user scenarios to validate the tool works c
 ### Test Steps:
 1. **Run basic environment check**:
    ```bash
-   doctor
+   goctor
    ```
 
 2. **Expected Output** (example):
@@ -56,7 +56,7 @@ This guide walks through the primary user scenarios to validate the tool works c
 ### Test Steps:
 1. **Run with JSON flag**:
    ```bash
-   doctor --json
+   goctor --json
    ```
 
 2. **Expected Output Structure**:
@@ -97,7 +97,7 @@ This guide walks through the primary user scenarios to validate the tool works c
 
 3. **Validate JSON parsing**:
    ```bash
-   doctor --json | jq '.summary.total'  # Should output number
+   goctor --json | jq '.summary.total'  # Should output number
    ```
 
 ### Success Criteria:
@@ -134,7 +134,7 @@ This guide walks through the primary user scenarios to validate the tool works c
 
 2. **Run with custom manifest**:
    ```bash
-   doctor -f test-manifest.yaml
+   goctor -f test-manifest.yaml
    ```
 
 3. **Expected Behavior**:
@@ -155,7 +155,7 @@ This guide walks through the primary user scenarios to validate the tool works c
 ### Test Steps:
 1. **List default tools**:
    ```bash
-   doctor list
+   goctor list
    ```
 
 2. **Expected Output**:
@@ -168,7 +168,7 @@ This guide walks through the primary user scenarios to validate the tool works c
 
 3. **List with JSON output**:
    ```bash
-   doctor list --json
+   goctor list --json
    ```
 
 ### Success Criteria:
@@ -185,20 +185,20 @@ This guide walks through the primary user scenarios to validate the tool works c
 1. **Test with remote manifest** (mock):
    ```bash
    # If remote manifest available
-   doctor -f https://company.example.com/dev-manifest.yaml
+   goctor -f https://company.example.com/dev-manifest.yaml
    ```
 
 2. **Test manifest override**:
    ```bash
    # Create personal override
-   doctor -f company-manifest.yaml -f personal-overrides.yaml
+   goctor -f company-manifest.yaml -f personal-overrides.yaml
    ```
 
 3. **CI Integration test**:
    ```bash
    # Simulate CI environment
    export CI=true
-   doctor --json > environment-report.json
+   goctor --json > environment-report.json
    if [ $? -eq 0 ]; then
      echo "Environment validation passed"
    else
@@ -218,7 +218,7 @@ This guide walks through the primary user scenarios to validate the tool works c
 ### Network Issues
 Test behavior when remote manifest is unavailable:
 ```bash
-doctor -f https://invalid.example.com/manifest.yaml
+goctor -f https://invalid.example.com/manifest.yaml
 ```
 
 **Expected**: Clear error message, graceful fallback behavior
@@ -235,7 +235,7 @@ Test with restricted command execution:
 Test with invalid YAML:
 ```bash
 echo "invalid: yaml: content" > bad-manifest.yaml
-doctor -f bad-manifest.yaml
+goctor -f bad-manifest.yaml
 ```
 
 **Expected**: Clear YAML parsing error message

@@ -12,7 +12,7 @@ func TestCustomManifestLoading(t *testing.T) {
 		t.Skip("Skipping integration test in short mode")
 	}
 
-	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cmd/doctor")
+	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cm./bin/goctor")
 	if err := buildCmd.Run(); err != nil {
 		t.Skip("Skipping test - unable to build binary")
 	}
@@ -61,7 +61,7 @@ tools:
 		defer os.Remove(manifestFile)
 
 		// Run doctor with custom manifest
-		cmd := exec.Command("./doctor-test", "doctor", "-f", manifestFile)
+		cmd := exec.Command("./bin/goctor-test", "doctor", "-f", manifestFile)
 		output, err := cmd.CombinedOutput()
 
 		if err != nil {
@@ -89,7 +89,7 @@ tools:
 		// Test using -f flag instead of --manifest
 		manifestFile := "testdata/manifests/sample.yaml"
 
-		cmd := exec.Command("./doctor-test", "doctor", "-f", manifestFile)
+		cmd := exec.Command("./bin/goctor-test", "doctor", "-f", manifestFile)
 		output, err := cmd.CombinedOutput()
 
 		if err != nil {
@@ -106,7 +106,7 @@ tools:
 
 	t.Run("invalid manifest file", func(t *testing.T) {
 		// Test with non-existent manifest file
-		cmd := exec.Command("./doctor-test", "doctor", "-f", "nonexistent-manifest.yaml")
+		cmd := exec.Command("./bin/goctor-test", "doctor", "-f", "nonexistent-manifest.yaml")
 		output, err := cmd.CombinedOutput()
 
 		// Should handle error gracefully
@@ -138,7 +138,7 @@ tools:
 		}
 		defer os.Remove(manifestFile)
 
-		cmd := exec.Command("./doctor-test", "doctor", "-f", manifestFile)
+		cmd := exec.Command("./bin/goctor-test", "doctor", "-f", manifestFile)
 		output, err := cmd.CombinedOutput()
 
 		// Should handle YAML parsing error gracefully
@@ -171,7 +171,7 @@ tools:
 		}
 		defer os.Remove(manifestFile)
 
-		cmd := exec.Command("./doctor-test", "doctor", "-f", manifestFile)
+		cmd := exec.Command("./bin/goctor-test", "doctor", "-f", manifestFile)
 		output, err := cmd.CombinedOutput()
 
 		// Should handle validation error gracefully
@@ -191,7 +191,7 @@ func TestManifestMerging(t *testing.T) {
 		t.Skip("Skipping integration test in short mode")
 	}
 
-	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cmd/doctor")
+	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cm./bin/goctor")
 	if err := buildCmd.Run(); err != nil {
 		t.Skip("Skipping test - unable to build binary")
 	}
@@ -226,7 +226,7 @@ tools:
 		defer os.Remove(manifestFile)
 
 		// Run with custom manifest
-		cmd := exec.Command("./doctor-test", "list", "-f", manifestFile)
+		cmd := exec.Command("./bin/goctor-test", "list", "-f", manifestFile)
 		output, err := cmd.CombinedOutput()
 
 		if err != nil {
@@ -250,7 +250,7 @@ func TestManifestDefaultsApplication(t *testing.T) {
 		t.Skip("Skipping integration test in short mode")
 	}
 
-	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cmd/doctor")
+	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cm./bin/goctor")
 	if err := buildCmd.Run(); err != nil {
 		t.Skip("Skipping test - unable to build binary")
 	}
@@ -296,7 +296,7 @@ tools:
 		defer os.Remove(manifestFile)
 
 		// Run doctor command - should complete quickly with defaults applied
-		cmd := exec.Command("./doctor-test", "doctor", "-f", manifestFile)
+		cmd := exec.Command("./bin/goctor-test", "doctor", "-f", manifestFile)
 		output, err := cmd.CombinedOutput()
 
 		if err != nil {
@@ -320,7 +320,7 @@ func TestRemoteManifestLoading(t *testing.T) {
 		t.Skip("Skipping integration test in short mode")
 	}
 
-	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cmd/doctor")
+	buildCmd := exec.Command("go", "build", "-o", "doctor-test", "./cm./bin/goctor")
 	if err := buildCmd.Run(); err != nil {
 		t.Skip("Skipping test - unable to build binary")
 	}
@@ -328,7 +328,7 @@ func TestRemoteManifestLoading(t *testing.T) {
 
 	t.Run("invalid URL", func(t *testing.T) {
 		// Test with invalid URL
-		cmd := exec.Command("./doctor-test", "doctor", "-f", "https://invalid.example.com/manifest.yaml")
+		cmd := exec.Command("./bin/goctor-test", "doctor", "-f", "https://invalid.example.com/manifest.yaml")
 		output, err := cmd.CombinedOutput()
 
 		// Should handle network error gracefully
@@ -344,7 +344,7 @@ func TestRemoteManifestLoading(t *testing.T) {
 
 	t.Run("non-YAML URL", func(t *testing.T) {
 		// Test with URL that doesn't serve YAML
-		cmd := exec.Command("./doctor-test", "doctor", "-f", "https://httpbin.org/json")
+		cmd := exec.Command("./bin/goctor-test", "doctor", "-f", "https://httpbin.org/json")
 		output, err := cmd.CombinedOutput()
 
 		// Should handle non-YAML content gracefully

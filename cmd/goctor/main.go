@@ -32,7 +32,7 @@ func main() {
 	}
 
 	if *versionFlag {
-		fmt.Printf("doctor version %s\n", version)
+		fmt.Printf("goctor version %s\n", version)
 		return
 	}
 
@@ -179,10 +179,10 @@ func runListCommand(manifestSource string, useJSON bool) int {
 }
 
 func showHelp() {
-	fmt.Print(`doctor - Development Environment Checker
+	fmt.Print(`goctor - Development Environment Checker
 
 USAGE:
-    doctor [command] [flags]
+    goctor [command] [flags]
 
 COMMANDS:
     doctor    Check development environment (default)
