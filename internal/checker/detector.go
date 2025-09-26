@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/company/doctor-cmd/internal/manifest"
-	"github.com/company/doctor-cmd/internal/platform"
-	"github.com/company/doctor-cmd/internal/semver"
+	"github.com/ikorihn/goctor/internal/manifest"
+	"github.com/ikorihn/goctor/internal/platform"
+	"github.com/ikorihn/goctor/internal/semver"
 )
 
 // Checker handles tool detection and version checking

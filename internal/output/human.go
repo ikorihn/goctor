@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/company/doctor-cmd/internal/checker"
-	"github.com/company/doctor-cmd/internal/manifest"
+	"github.com/ikorihn/goctor/internal/checker"
+	"github.com/ikorihn/goctor/internal/manifest"
 )
 
 // HumanFormatter provides human-readable output formatting

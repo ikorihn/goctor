@@ -1,4 +1,4 @@
-module github.com/company/doctor-cmd
+module github.com/ikorihn/goctor
 
 go 1.25.1
 

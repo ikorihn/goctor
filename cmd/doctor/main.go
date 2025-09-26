@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/company/doctor-cmd/internal/checker"
-	"github.com/company/doctor-cmd/internal/manifest"
-	"github.com/company/doctor-cmd/internal/output"
-	"github.com/company/doctor-cmd/internal/platform"
+	"github.com/ikorihn/goctor/internal/checker"
+	"github.com/ikorihn/goctor/internal/manifest"
+	"github.com/ikorihn/goctor/internal/output"
+	"github.com/ikorihn/goctor/internal/platform"
 )
 
 const (
